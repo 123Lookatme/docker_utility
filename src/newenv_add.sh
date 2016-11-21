@@ -39,6 +39,7 @@ COMMANDS="--net $GROUP --network-alias $INSTANCE --name $CONTAINER --env MOUNTDI
 [ "$HOSTALIAS" ] && COMMANDS+=" --hostname $HOSTALIAS"
 [ "$AUTOSTART" ] && COMMANDS+=" --restart unless-stopped"
 
+
 #FACTS
 echo -e "$(tput setaf 2)Gathering facts...$(tput sgr 0)" 
 Facts="Facts:\n"
@@ -84,13 +85,14 @@ confirm $Facts && echo "$(tput setaf 2)Starting...$(tput sgr 0)" || exit 0
 
 #BUILD
 if [ ! "$(check_build $IMAGENAME)" ];then
-  RESULT=$(execute_command build $DOCKER_FILEPATH $IMAGENAME)
-  [ $? -eq 0 ] && echo -e "$RESULT" || echo -e "$RESULT" && exit 1
+  echo -e "$(tput setab 7)$(tput setaf 1)$(build_command $DOCKER_FILE_PATH $IMAGENAME)$(tput sgr 0)\n"
+  $(build_command $DOCKER_FILE_PATH $IMAGENAME)
+  [ $? -eq 1 ] && exit 1
 fi
 
 if [ ! "$(check_network $GROUP)" ];then
     RESULT=$(execute_command network $GROUP)
-    [ $? -eq 0 ] && echo -e "$(tput setaf 2)$RESULT$(tput sgr 0)\n" || echo -e "$RESULT" && exit 1 
+    [ $? -eq 0 ] && echo -e "$(tput setaf 2)$RESULT$(tput sgr 0)\n" || (echo -e "$RESULT" && exit 1 )
 fi
 
 #HOSTALIAS
@@ -101,12 +103,12 @@ if [ "$HOSTALIAS" ];then
 fi
 
 #RUN
-RESULT=$(execute_command run $INSTANCE $COMMANDS)
-[ $? -eq 0 ] && echo -e "$(tput setaf 2)Container successfuly started with id: $RESULT$(tput sgr 0)\n" || echo -e "$RESULT" && exit 1
+RESULT=$(execute_command run $IMAGENAME "$COMMANDS")
+[ $? -eq 0 ] && echo -e "$(tput setaf 2)$RESULT$(tput sgr 0)\n" || (echo -e "$RESULT" && exit 1)
 #ADD DNS
 echo "$IP  $HOSTALIAS" >> $DOCKER_DDNS
 pkill -x -HUP dnsmasq
-echo "$(tput setaf 2)Good bye :)$(tput sgr 0)\n"
+echo "$(tput setaf 2)Good bye :)$(tput sgr 0)"
 
 
 

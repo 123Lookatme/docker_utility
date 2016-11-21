@@ -102,10 +102,6 @@ confirm () {
 
 execute_command(){
   case "$1" in
-  build)
-    COMMAND=$(build_command "${@:2}")
-    shift
-    ;;
   run)
     COMMAND=$(run_command "${@:2}")
     shift
@@ -119,6 +115,7 @@ execute_command(){
     exit 1
     ;;
 esac
+
 echo -e "$(tput setab 7)$(tput setaf 1)$COMMAND$(tput sgr 0)\n"
 RESULT=`$COMMAND 2>&1`
 ERROR=$(echo "$RESULT" | egrep -i "error|conflict|unable|requires")
@@ -150,7 +147,7 @@ run_command(){
 }
 
 network_command(){
-  echo "docker network create $1"
+  echo "docker network create --subnet $(generate_subnet) $1"
 }
 
 array_contains () {
@@ -173,6 +170,16 @@ get_iprange(){
  docker network inspect $1 --format '{{range .Containers}}{{.IPv4Address}} {{end}}' 2>&1
 }
 
+generate_subnet(){
+MAIN_SUBNET=$(docker network inspect bridge --format '{{range .IPAM.Config}}{{.Subnet}}{{end}}' | cut -d. -f1-2)
+EXISTED_NETWORKS=$(docker network inspect $(docker network ls -q) --format '{{range .IPAM.Config}}{{.Subnet}}{{end}}' | grep -v '^$' | cut -d. -f1-2)
+
+for (( i=0;i<252;i++ ));do
+  SUBNET=$(echo "$MAIN_SUBNET + 0.0$i" | bc)
+  $(array_contains $SUBNET $EXISTED_NETWORKS) && continue || echo $SUBNET".0.0/16" && exit 0
+done
+}
+
 generate_ip(){
   for ip in $(seq -f "$(echo $(get_network_subnet $1) | cut -d. -f1-3).%g" 2 10); do 
     if [[ ! $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
@@ -184,8 +191,5 @@ generate_ip(){
  done
 }
 
-set_config_var(){
-  echo "set"
-}
 
 

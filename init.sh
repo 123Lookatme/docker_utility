@@ -17,7 +17,10 @@ interface=docker0
 #bind-interfaces
 DNS
 sed -i '/user=/c\user='"$NEWENV_USER" /etc/dnsmasq.conf
-service dnsmasq restart
+sleep 1
+pkill dnsmasq
+sleep 1
+service dnsmasq start
 
 #make config
 cat > $NEWENV_CONF <<CONF
