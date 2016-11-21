@@ -186,7 +186,7 @@ generate_ip(){
 	then
 	  exit 1
 	else
-	 [[ $(array_contains $ip $(get_iprange $1)) ]] && continue || echo $ip && exit 0
+	 $(array_contains $ip"/16" $(get_iprange $1)) && continue || echo $ip && exit 0
     fi
  done
 }

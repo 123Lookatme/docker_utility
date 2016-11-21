@@ -46,7 +46,11 @@ Facts="Facts:\n"
 
 [ $(check_container_exists $CONTAINER) ] && echo -e "$(tput setaf 1)Container Allready exists: $CONTAINER$(tput sgr 0)" && exit 1
 if [ ! "$BUILD_EXISTS" ];then
-  [[ "$(check_dockerfile $NEWENV_INCLUDE/$INSTANCE)" ]] && DOCKER_FILE_PATH="$NEWENV_INCLUDE/$INSTANCE" || [[ "$(check_dockerfile $DOCKERFILES/$INSTANCE)" ]] && DOCKER_FILE_PATH="$DOCKERFILES/$INSTANCE"
+  if [[ "$(check_dockerfile $NEWENV_INCLUDE/$INSTANCE)" ]];then
+   DOCKER_FILE_PATH="$NEWENV_INCLUDE/$INSTANCE" 
+  else
+ [[ "$(check_dockerfile $DOCKERFILES/$INSTANCE)" ]] && DOCKER_FILE_PATH="$DOCKERFILES/$INSTANCE"
+  fi
   [ ! "$DOCKER_FILE_PATH" ] && echo -e "$(tput setaf 1)Dockerfile not found in dirrectories:\n\t$DOCKERFILES"/"$INSTANCE\n\t$NEWENV_INCLUDE/$INSTANCE$(tput sgr 0)" && exit 1 
 fi
 
