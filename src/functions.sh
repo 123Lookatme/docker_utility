@@ -181,7 +181,7 @@ done
 }
 
 generate_ip(){
-  for ip in $(seq -f "$(echo $(get_network_subnet $1) | cut -d. -f1-3).%g" 2 10); do 
+  for ip in $(seq -f "$(echo $(get_network_subnet $1) | cut -d. -f1-3).%g" 2 252); do 
     if [[ ! $ip =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]]; 
 	then
 	  exit 1
