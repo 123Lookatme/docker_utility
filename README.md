@@ -14,11 +14,7 @@ After execute :
 
  ```bash 
  newenv add [INSTANCE] [OPTIONS] [ARGS]
- ```
- ```bash
  newenv conf [value]
- ```
- ```bash
  newenv --help
  ```
  >**Note:** Every step supports -h or --help  
