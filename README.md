@@ -24,7 +24,7 @@ After execute :
 ___
 
 ##USE:  
-If you do not want remember all docker commands, the following script making everything for you. It will:
+If you dont want to remember all docker commands the following script making everything for you. It will:
 * Find image from local library or use remote one
 * Mount folders dirrectly in you project without additional commands
 * Create network, with specified name and sub-net, which obtain same sub-ip address after reboot
