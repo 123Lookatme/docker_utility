@@ -11,7 +11,6 @@ After execute :
  -[Dnsmasq](http://www.thekelleys.org.uk/dnsmasq/doc.html) will be installed  
 
  After execute complete you will be able using commands: 
-
  ```bash 
  newenv add [INSTANCE] [OPTIONS] [ARGS]
  newenv conf [value]
