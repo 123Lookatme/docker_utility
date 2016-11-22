@@ -7,6 +7,8 @@ RUN apt-get update && \
         curl \
         apache2 \
         libapache2-mod-php5 \
+				php5 \
+				php5-memcache \
         php5-mysql \
         php5-mcrypt \
         php5-gd \

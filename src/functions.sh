@@ -79,6 +79,9 @@ for arg in "$@"
     -g=*) GROUP="${arg#*=}"
     shift
     ;;
+    -i) SKIP=1
+    shift
+    ;;
     *) ARGS+="$arg "
     shift
     ;;

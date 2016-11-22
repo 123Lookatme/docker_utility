@@ -14,6 +14,10 @@ Options:
   -c=value      replacing default container entrypoint ( -c=/bin/bash ) 
                 For more information check 'docker run --help' where [COMMAND] equal -c
 
+  -i            Ignore local Dockerfiles.
+                With this option Dockerfile will be searched from Dockerhub repository
+                Note: If image allready exists - local image will be used
+
   -h=value      adding container alias to host file. Where [value] = alias
 
   -m=value      Path where container apperars(Default: ./)
@@ -28,7 +32,7 @@ Args:
 "
 parse_instance "$@"
 parse_options "${@:2}"
-IMAGENAME=$ENV"_"$INSTANCE
+[ ! "$SKIP" ] && IMAGENAME=$ENV"_"$INSTANCE || IMAGENAME=$INSTANCE
 [ "$HOSTDIR" ] && HOST_PATH="$HOSTDIR" || HOST_PATH="$NEWENV_USER_PATH"
 [ ! "$GROUP" ] && GROUP=$(basename "$HOST_PATH")
 CONTAINER=$GROUP"_"$INSTANCE
@@ -45,7 +49,7 @@ echo -e "$(tput setaf 2)Gathering facts...$(tput sgr 0)"
 Facts="Facts:\n"
 
 [ $(check_container_exists $CONTAINER) ] && echo -e "$(tput setaf 1)Container Allready exists: $CONTAINER$(tput sgr 0)" && exit 1
-if [ ! "$BUILD_EXISTS" ];then
+if [[ ! "$BUILD_EXISTS" && ! "$SKIP" ]];then
   if [[ "$(check_dockerfile $NEWENV_INCLUDE/$INSTANCE)" ]];then
    DOCKER_FILE_PATH="$NEWENV_INCLUDE/$INSTANCE" 
   else
@@ -58,6 +62,9 @@ Facts="$Facts  Image:\n"
 if [ "$BUILD_EXISTS" ]
 then
   Facts="$Facts - Existed image will be used: \"$IMAGENAME\"\n"
+elif [ "$SKIP" ]
+then
+  Facts="$Facts - Image will be searched:\t \"$INSTANCE\"  From Dockerhub repository.\n"
 else
   Facts="$Facts - New image will be created:\t\t \"$IMAGENAME\"\n  - From Dockerfile \"$DOCKER_FILE_PATH\"\n"
 fi
@@ -88,12 +95,12 @@ fi
 confirm $Facts && echo "$(tput setaf 2)Starting...$(tput sgr 0)" || exit 0
 
 #BUILD
-if [ ! "$(check_build $IMAGENAME)" ];then
+if [[ ! "$(check_build $IMAGENAME)" && ! "$SKIP" ]];then
   echo -e "$(tput setab 7)$(tput setaf 1)$(build_command $DOCKER_FILE_PATH $IMAGENAME)$(tput sgr 0)\n"
   $(build_command $DOCKER_FILE_PATH $IMAGENAME)
   [ $? -eq 1 ] && exit 1
 fi
-
+#NETWORK
 if [ ! "$(check_network $GROUP)" ];then
     RESULT=$(execute_command network $GROUP)
     [ $? -eq 0 ] && echo -e "$(tput setaf 2)$RESULT$(tput sgr 0)\n" || (echo -e "$RESULT" && exit 1 )

@@ -22,7 +22,7 @@ create_config_dir(){
 
 apply_config_changes(){
   sed -i "s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf && \
-  sed -i "s/Require all/Require all granted/g" /etc/apache2/apache2.conf && \
+  sed -i "s/Require all denied/Require all granted/g" /etc/apache2/apache2.conf && \
   sed -i '/IncludeOptional conf-enabled/c\IncludeOptional '"${MOUNTDIR}"'/config/conf-enabled/*.conf' /etc/apache2/apache2.conf && \
   sed -i '/IncludeOptional sites-enabled/c\IncludeOptional '"${MOUNTDIR}"'/config/sites-enabled/*.conf' /etc/apache2/apache2.conf && \
   sed -i "s/variables_order.*/variables_order = \"EGPCS\"/g" /etc/php5/apache2/php.ini && \
