@@ -39,8 +39,7 @@ Here we go...
 ```
 When you running first time and not have builded instances yet - The first place where Dockerfile expected is library.  
 Default Dockerfile's library will be instaled to */var/lib/newenv/lib/[instance]*  
-Second place to check is `$HOME` dirrectory( */[instance]/Dockerfile*), if your own library not included.  
-Otherwise `$HOME` dirrectory will be ignored and first place to search will be your own library while default library will be second one
+Second place to check is `$HOME` dirrectory( */[instance]/Dockerfile*), if your own library not included. Otherwise `$HOME` dirrectory will be ignored and first place to search will be your own library while default library will be second one
 > **Note:** To see how include your own library check `newenv conf` block below 
 
 ```code
