@@ -1,5 +1,12 @@
 # Docker utility:
 
+If you dont want to remember all docker commands the following utility making everything for you. It will:
+* Find image from local library or use remote one
+* Mount folders dirrectly in you project without additional commands
+* Create network, with specified name and sub-net, which obtain same sub-ip address after reboot
+* Connect all instances to one network automaticly inside one project, so they can communicate each-other by instance name (e.g `ping mysql`)
+* Make your containers responding from host machine by alias name
+* Make containers automaticly start on system boot
 
 ## INSTALL:
 ___
@@ -24,15 +31,7 @@ After execute :
 ___
 
 ##USE:  
-If you dont want to remember all docker commands the following utility making everything for you. It will:
-* Find image from local library or use remote one
-* Mount folders dirrectly in you project without additional commands
-* Create network, with specified name and sub-net, which obtain same sub-ip address after reboot
-* Connect all instances to one network automaticly inside one project, so they can communicate each-other by instance name (e.g `ping mysql`)
-* Make your containers responding from host machine by alias name
-* Make containers automaticly start on system boot
 
-Here we go...
 ### `newenv add:`
 ```bash
 [INSTANCE] - specifies image name you want to install
