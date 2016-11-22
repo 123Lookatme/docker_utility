@@ -6,10 +6,12 @@ If you dont want to remember all docker commands the following utility making ev
 * Create network, with specified name and sub-net, which obtain same sub-ip address after reboot
 * Connect all instances to one network automaticly inside one project, so they can communicate each-other by instance name (e.g `ping mysql`)
 * Make your containers responding from host machine by alias name
-* Make containers automaticly start on system boot
+* Make containers automaticly start on system boot  
+
+___
 
 ## INSTALL:
-___
+
 Download automake file: [Newenv](https://github.com/123Lookatme/docker_utility/raw/master/newenv.sh) file
 ```bash
 cd /path_to_file_location  
@@ -28,6 +30,7 @@ After execute :
  newenv --help
  ```
  >**Note:** Every step supports -h or --help  
+ 
 ___
 
 ##USE:  
@@ -71,7 +74,7 @@ For example: If you run `newenv add mysql` command from `/myproject` - you will 
 ```
 You can run container with additional options provided by docker run [OPTIONS]
 For example -p 8080:80. For more information see 'docker run --help'
-___
+
 ### `newenv conf:`
 * **-i** - check included liubrary path
 * **-i=full_path** - spesifies your own library with Dockerfile's
