@@ -5,21 +5,29 @@ NEWENV_USER="newenv"
 NEWENV_CONF=$NEWENV_PATH"/src/newenv.conf"
 NEWENV_DNS=$NEWENV_PATH/newenv-hosts
 
+#Remove default mask
+apt-get purge dnsmasq
+
 #install docker if not exists
-[ ! "$(command -v docker)" ] && curl -sSL https://get.docker.com | sudo sh
+[ ! "$(command -v docker)" ] && curl -sSL https://get.docker.com | sudo sh || apt-get update
 
 #instal dnsmasq if not exists
 apt-get install dnsmasq -y
+
+#apply config changes
 touch $NEWENV_DNS
 cat > /etc/dnsmasq.d/newenv-dns <<DNS
 addn-hosts=$NEWENV_DNS
 interface=docker0
 #bind-interfaces
 DNS
+chown $NEWENV_USER /etc/dnsmasq.d/newenv-dns
+chmod 0644 /etc/dnsmasq.d/newenv-dns
+sed -i '/Requires\c\After=docker.service' /lib/systemd/system/dnsmasq.service && \
 sed -i '/user=/c\user='"$NEWENV_USER" /etc/dnsmasq.conf
 sleep 1
 pkill dnsmasq
-sleep 1
+sleep 5
 service dnsmasq start
 
 #make config
