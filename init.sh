@@ -5,9 +5,13 @@ NEWENV_USER="newenv"
 NEWENV_CONF=$NEWENV_PATH"/src/newenv.conf"
 NEWENV_DNS=$NEWENV_PATH/newenv-hosts
 
+
+groupadd docker -f
+
 #Remove default mask
 apt-get purge dnsmasq -y
 apt-get update && apt-get install curl -y
+
 #install docker if not exists
 [[ ! $(docker -v 2>/dev/null) ]] && curl -sSL https://get.docker.com | sudo sh
 
@@ -24,11 +28,10 @@ DNS
 chown $NEWENV_USER /etc/dnsmasq.d/newenv-dns
 chmod 0644 /etc/dnsmasq.d/newenv-dns
 sed -i '/Description=/c\Description=A lightweight DHCP and caching DNS server\nAfter=docker.service' /lib/systemd/system/dnsmasq.service && \
-sed -i '/user=/c\user='"$NEWENV_USER" /etc/dnsmasq.conf
+sed -i '/user=/c\user='"$NEWENV_USER" /etc/dnsmasq.conf && \
+sed -i 's/^dns=*/#dns=/' /etc/NetworkManager/NetworkManager.conf
 sleep 1
 pkill dnsmasq
-sleep 5
-service dnsmasq start
 
 #make config
 cat > $NEWENV_CONF <<CONF
@@ -46,7 +49,8 @@ getent passwd $NEWENV_USER > /dev/null 2>&1
 
 if [ ! "$?" -eq 0 ]; then
   useradd -M $NEWENV_USER --shell /bin/false
-  usermod -G docker $NEWENV_USER
+  sleep 1
+  usermod -aG docker $NEWENV_USER
 fi
 
 chown $NEWENV_USER -R $NEWENV_PATH
@@ -62,6 +66,7 @@ cd $NEWENV_PATH/src
 NEWENV_CONF=$NEWENV_CONF NEWENV_USER_PATH=\$OLDPWD sudo -u $NEWENV_USER -H -E /bin/bash ./newenv.sh \$@
 EOF
 chmod 555 /usr/sbin/newenv
+service docker restart && service dnsmasq restart
 echo "$(tput setaf 2)Install complete successfuly!$(tput sgr 0)"
 echo "$(tput setaf 2)Note: Use 'newenv conf -i=/path_to_lib' to add your own library with Dockerfiles. $(tput sgr 0)"
 newenv --help
