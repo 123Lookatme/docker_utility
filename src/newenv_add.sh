@@ -117,7 +117,7 @@ fi
 RESULT=$(execute_command run $IMAGENAME "$COMMANDS")
 [ $? -eq 0 ] && echo -e "$(tput setaf 2)$RESULT$(tput sgr 0)\n" || (echo -e "$RESULT" && exit 1)
 #ADD DNS
-[ "$(grep $IP $DOCKER_DDNS)" ] && sed -i '/'"$IP"'/c\'"$IP  $HOSTALIAS"'' $DOCKER_DDNS || echo "$IP  $HOSTALIAS" >> $DOCKER_DDNS
+[ "$(grep $IP $DOCKER_DDNS)" ] && sed -i '/'"$IP"'/c\'"$IP  $HOSTALIAS" \#=>$CONTAINER'' $DOCKER_DDNS || echo "$IP  $HOSTALIAS \#=>$CONTAINER" >> $DOCKER_DDNS
 pkill -x -HUP dnsmasq
 echo "$(tput setaf 2)Good bye :)$(tput sgr 0)"
 

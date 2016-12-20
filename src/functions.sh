@@ -9,6 +9,10 @@ parse_command() {
     echo "$usage"
     exit
     ;;
+	hosts)
+    cat $DOCKER_DDNS
+    shift
+	;;
     conf)
     . newenv_conf.sh "${@:2}"
     shift

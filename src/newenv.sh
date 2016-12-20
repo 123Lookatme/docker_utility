@@ -9,6 +9,7 @@ COMMANDS:
 
   add       create new container (in current dir by default). See 'newenv add --help ' for details
   conf      Select or define config variables. See 'newenv conf --help for details'
+  hosts		list of hosts linked with containers
 "
 
 #RUN ROUTER
