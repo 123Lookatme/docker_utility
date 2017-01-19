@@ -79,4 +79,4 @@ For example -p 8080:80. For more information see 'docker run --help'
 * **-i** - check included liubrary path
 * **-i=full_path** - spesifies your own library with Dockerfile's
  
- 
+ ### `newenv hosts:` list of your docker machine aliases from host file 
