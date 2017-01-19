@@ -27,9 +27,7 @@ interface=docker0
 DNS
 chown $NEWENV_USER /etc/dnsmasq.d/newenv-dns
 chmod 0644 /etc/dnsmasq.d/newenv-dns
-sed -i '/Description=/c\Description=A lightweight DHCP and caching DNS server\nAfter=docker.service' /lib/systemd/system/dnsmasq.service && \
-sed -i '/user=/c\user='"$NEWENV_USER" /etc/dnsmasq.conf && \
-sed -i 's/^dns=*/#dns=/' /etc/NetworkManager/NetworkManager.conf
+sed -i '/bind-interfaces/s/^/#/' /etc/dnsmasq.d/network-manager
 sleep 1
 pkill dnsmasq
 
